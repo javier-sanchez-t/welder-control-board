@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import Row from "./components/row";
+import Button from "./components/button";
+import Component from "./components/component";
 
 function App() {
+  const board = [
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+  ];
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Component />
+      {board.map((row, rowIndex) => {
+        return (
+          <Row key={"row_" + rowIndex}>
+            {row.map((column, columnIndex) => {
+              return <Button key={"button_" + columnIndex} />;
+            })}
+          </Row>
+        );
+      })}
     </div>
   );
 }
