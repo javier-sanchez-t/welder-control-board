@@ -1,0 +1,9 @@
+.app-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.app-container > div {
+  flex-grow: 1;
+}
+
