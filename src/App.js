@@ -70,7 +70,6 @@ function App() {
             mode="javascript"
             theme="monokai"
             fontSize={18}
-            readOnly
             value={code}
             name={CODE_EDITOR_ID}
             editorProps={{ $blockScrolling: true }}
