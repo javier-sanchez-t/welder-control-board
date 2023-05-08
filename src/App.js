@@ -39,18 +39,18 @@ function App() {
                 if (item === 1) {
                     newCode += "myservo1.write(60, 10, true);     // pierna abajo \nmyservo2.write(100, 10, true);     // pierna abajo \ndelay(5000);\n\n";
                 }
-                
+
                 if (item === 2) {
                     newCode += "myservo1.write(70, 10, true);     // pierna abajo \nmyservo2.write(130, 10, true);     // pierna abajo \ndelay(5000);\n\n ";
                 }
             });
-            newCode+="\n}";
+            newCode += "\n}";
             setCode(newCode);
         },
         [board, counter]
     );
 
-    const copiarCodigo = ()=>{
+    const copiarCodigo = () => {
         console.log('copiando');
         navigator.clipboard.writeText(code);
         console.log('termino copiar');
@@ -79,7 +79,7 @@ function App() {
                 </div>
 
                 <div>
-                    <button type="button" onClick={()=>copiarCodigo} >Copiar código</button>
+                    <button type="button" onClick={() => copiarCodigo()} >Copiar código</button>
                     <AceEditor
                         mode="javascript"
                         theme="monokai"
