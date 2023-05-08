@@ -40,7 +40,7 @@ function App() {
                     newCode += "myservo1.write(60, 10, true);     // pierna abajo \nmyservo2.write(100, 10, true);     // pierna abajo \ndelay(5000); \n\nmyservo1.write(70, 10, true);     // pierna abajo \nmyservo2.write(130, 10, true);     // pierna abajo \ndelay(5000); ";
                 }
             });
-            newCode+="\n\n}";
+            newCode+="\n}";
             setCode(newCode);
         },
         [board, counter]
