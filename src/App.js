@@ -27,10 +27,19 @@ function App() {
             const newCounter = counter + 1;
             setCounter(newCounter);
             const newBoard = board;
-            newBoard[rowIndex][columnIndex] = newCounter;
+            newBoard[rowIndex][columnIndex] = 'activo';
             setBoard(newBoard);
 
-            const items = newBoard
+            let newCode = "#include <VarSpeedServo.h> \n\nVarSpeedServo myservo1;    // create servo object to control a servo \nVarSpeedServo myservo2; \n\nvoid setup() { \nmyservo1.attach(8);  // attaches the servo on pin 9 to the servo object \nmyservo2.attach(9);  // attaches the servo on pin 9 to the servo object \n} \n\nvoid loop() {\n";
+            newBoard.forEach((row, rIndex) => {
+                newBoard[rIndex].forEach((column, cIndex) => {
+                    if (rIndex === 0 && cIndex === 0 && newBoard[rIndex][cIndex] = 'activo') {
+                        newCode += "myservo1.write(60, 10, true);     // pierna abajo \nmyservo2.write(100, 10, true);     // pierna abajo \ndelay(5000);\n\n";
+                    }
+                });
+            });
+
+            /*const items = newBoard
                 .flat()
                 .sort((a, b) => a - b)
                 .filter(Boolean);
@@ -43,7 +52,7 @@ function App() {
                 if (item === 2) {
                     newCode += "myservo1.write(70, 10, true);     // pierna abajo \nmyservo2.write(130, 10, true);     // pierna abajo \ndelay(5000);\n\n ";
                 }
-            });
+            });*/
             newCode += "\n}";
             setCode(newCode);
         },
