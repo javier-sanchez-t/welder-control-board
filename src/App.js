@@ -34,13 +34,13 @@ function App() {
                 .flat()
                 .sort((a, b) => a - b)
                 .filter(Boolean);
-            let newCode = "#include <VarSpeedServo.h> \n\n VarSpeedServo myservo1;    // create servo object to control a servo \n\nVarSpeedServo myservo2; \n\n void setup() { \n\n myservo1.attach(8);  // attaches the servo on pin 9 to the servo object \n\nmyservo2.attach(9);  // attaches the servo on pin 9 to the servo object \n } \nvoid loop() {";
+            let newCode = "#include <VarSpeedServo.h> \n\nVarSpeedServo myservo1;    // create servo object to control a servo \n\nVarSpeedServo myservo2; \n\n void setup() { \n\n myservo1.attach(8);  // attaches the servo on pin 9 to the servo object \n\nmyservo2.attach(9);  // attaches the servo on pin 9 to the servo object \n } \nvoid loop() {";
             items.forEach((item) => {
                 if (item === 1) {
                     newCode += "  myservo1.write(60, 10, true);     // pierna abajo \n myservo2.write(100, 10, true);     // pierna abajo \n delay(5000); \n\nmyservo1.write(70, 10, true);     // pierna abajo \nmyservo2.write(130, 10, true);     // pierna abajo \n delay(5000); ";
                 }
             });
-            newCode+="}";
+            newCode+="\n\n}";
             setCode(newCode);
         },
         [board, counter]
