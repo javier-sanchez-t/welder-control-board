@@ -51,7 +51,9 @@ function App() {
     );
 
     const copiarCodigo = ()=>{
+        console.log('copiando');
         navigator.clipboard.writeText(code);
+        console.log('termino copiar');
     };
 
     return (
