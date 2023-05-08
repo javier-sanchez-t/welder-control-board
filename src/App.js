@@ -50,6 +50,10 @@ function App() {
         [board, counter]
     );
 
+    const copiarCodigo = ()=>{
+        navigator.clipboard.writeText(code);
+    };
+
     return (
         <div className="App">
             <div className={styles["app-container"]}>
@@ -73,6 +77,7 @@ function App() {
                 </div>
 
                 <div>
+                    <button type="button" onClick={()=>copiarCodigo} >Copiar código</button>
                     <AceEditor
                         mode="javascript"
                         theme="monokai"
