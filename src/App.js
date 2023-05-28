@@ -33,7 +33,8 @@ function App() {
   const onItemDrop = useCallback(
     (rowIndex, columnIndex) => {
       const newBoard = board;
-      newBoard[rowIndex][columnIndex] = "activo";
+      const oldValue = newBoard[rowIndex][columnIndex];
+      newBoard[rowIndex][columnIndex] = oldValue === 0 ? "activo" : 0;
       setBoard(newBoard);
 
       const points = [];
@@ -119,7 +120,7 @@ function App() {
         }
       }`;
 
-      setCode(newCode);
+      setCode(instructions !== "" ? newCode : "");
     },
     [board]
   );
@@ -131,28 +132,39 @@ function App() {
   return (
     <div className="App">
       <div className={styles["app-container"]}>
-        <div>
-          {board.map((row, rowIndex) => {
-            return (
-              <Row key={"row_" + rowIndex}>
-                {row.map((column, columnIndex) => {
-                  return (
-                    <Button
-                      key={"button_" + columnIndex}
-                      index={board[rowIndex][columnIndex]}
-                      onClick={() => onItemDrop(rowIndex, columnIndex)}
-                    />
-                  );
-                })}
-              </Row>
-            );
-          })}
-        </div>
+        <section>
+          <div className={styles["board-container"]}>
+            <div>
+              <img src="./logo ITESA.png" alt="ITESA" width={250} />
+            </div>
 
-        <div>
-          <button type="button" onClick={() => copyCode()}>
-            Copiar código
-          </button>
+            <div>
+              {board.map((row, rowIndex) => {
+                return (
+                  <Row key={"row_" + rowIndex}>
+                    {row.map((column, columnIndex) => {
+                      return (
+                        <Button
+                          key={"button_" + columnIndex}
+                          index={board[rowIndex][columnIndex]}
+                          onClick={() => onItemDrop(rowIndex, columnIndex)}
+                        />
+                      );
+                    })}
+                  </Row>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div className={styles["copy-code"]}>
+            <button type="button" onClick={() => copyCode()}>
+              Copiar código
+            </button>
+          </div>
+
           <AceEditor
             className={styles["code-editor"]}
             mode="javascript"
@@ -162,7 +174,7 @@ function App() {
             name={CODE_EDITOR_ID}
             editorProps={{ $blockScrolling: true }}
           />
-        </div>
+        </section>
       </div>
     </div>
   );

@@ -20,7 +20,6 @@ export default function Button({ index, onClick }) {
 
   return (
     <div className={styles.button} onDrop={onDrop} onDragOver={allowDrop}>
-      {/* {index} */}
       {(() => {
         if (index !== null) {
           return (
