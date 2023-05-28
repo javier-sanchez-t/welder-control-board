@@ -74,14 +74,15 @@ function App() {
         instructions += moveServoInstructions(point, "-");
         instructions += `
             // Soldar
-            myservo2.write(90, 30, true);    
-            myservo1.write(90, 30, true);    
+            myservo2.write(90, 30, true); 
+            myservo1.write(90, 30, true); 
             delay(1);
-            myservo2.write(170, 30, true);    
-            myservo1.write(140, 30, true);    
+            myservo2.write(150, 30, true);
+            myservo1.write(180, 30, true); 
+
             delay(6000);
-            myservo1.write(90, 30, true);    
-            myservo2.write(90, 30, true);\n`;
+            myservo1.write(90, 30, true); 
+            myservo2.write(90, 30, true); \n`;
         instructions += `
             // Regresar a punto de partida`;
         instructions += moveServoInstructions(point, "+");
