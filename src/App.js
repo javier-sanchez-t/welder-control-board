@@ -49,7 +49,7 @@ function App() {
       const moveServoInstructions = ({ rowIndex, columnIndex }, direction) => {
         let servoInstructions = "";
         const sign = direction === "+" ? "" : "-";
-        const numStepsY = rowIndex * 4;
+        const numStepsY = rowIndex * 2;
         for (let step = 0; step < numStepsY; step++) {
           servoInstructions += `
             myStepper1.step(${sign}stepsPerRevolution);
@@ -58,7 +58,7 @@ function App() {
             myStepper1.step(${sign}stepsPerRevolution);\n`;
         }
 
-        const numStepsX = columnIndex * 4;
+        const numStepsX = columnIndex * 2;
         for (let step = 0; step < numStepsX; step++) {
           servoInstructions += `
             myStepper2.step(${sign}stepsPerRevolution);
@@ -154,6 +154,7 @@ function App() {
             Copiar código
           </button>
           <AceEditor
+            className={styles["code-editor"]}
             mode="javascript"
             theme="monokai"
             fontSize={18}
