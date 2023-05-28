@@ -106,7 +106,7 @@ function App() {
         myservo2.attach(7);
       
         myStepper1.setSpeed(60);
-        myStepper1.setSpeed(60);
+        myStepper2.setSpeed(60);
       
         Serial.begin(9600);
       }
