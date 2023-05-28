@@ -1,12 +1,12 @@
 import { useState } from "react";
 import styles from "./styles.module.css";
 
-export default function Button({ index, onDropInto }) {
+export default function Button({ index, onClick }) {
   const [active, setActive] = useState(false);
   const onDrop = () => {
     console.log("OnDROP");
     setActive(true);
-    onDropInto();
+    // onDropInto();
   };
 
   const allowDrop = (ev) => {
@@ -14,18 +14,25 @@ export default function Button({ index, onDropInto }) {
   };
 
   const handleClick = () => {
-    setActive(false);
+    onClick();
+    setActive((isActive) => !isActive);
   };
 
   return (
     <div className={styles.button} onDrop={onDrop} onDragOver={allowDrop}>
-      {index}
-      <input
-        type="radio"
-        checked={active}
-        onChange={() => {}}
-        onClick={handleClick}
-      />
+      {/* {index} */}
+      {(() => {
+        if (index !== null) {
+          return (
+            <input
+              type="radio"
+              checked={active}
+              onChange={() => {}}
+              onClick={handleClick}
+            />
+          );
+        }
+      })()}
     </div>
   );
 }

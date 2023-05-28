@@ -4,107 +4,205 @@ import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools";
 import Row from "./components/row";
 import Button from "./components/button";
-import Component from "./components/component";
 import { useCallback, useState } from "react";
 
 import styles from "./styles.module.css";
 
 function App() {
-    const CODE_EDITOR_ID = "code-editor";
-    const InitialBoard = [
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0],
-    ];
-    const [board, setBoard] = useState(InitialBoard);
-    const [counter, setCounter] = useState(0);
-    const [code, setCode] = useState("");
+  const CODE_EDITOR_ID = "code-editor";
+  const InitialBoard = [
+    [null, null, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null],
+    [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null],
+    [null, null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null],
+  ];
+  const [board, setBoard] = useState(InitialBoard);
+  const [counter, setCounter] = useState(0);
+  const [code, setCode] = useState("");
 
-    const onItemDrop = useCallback(
-        (rowIndex, columnIndex) => {
-            const newCounter = counter + 1;
-            setCounter(newCounter);
-            const newBoard = board;
-            newBoard[rowIndex][columnIndex] = 'activo';
-            setBoard(newBoard);
+  const onItemDrop = useCallback(
+    (rowIndex, columnIndex) => {
+      const newCounter = counter + 1;
+      setCounter(newCounter);
+      const newBoard = board;
+      newBoard[rowIndex][columnIndex] = "activo";
+      setBoard(newBoard);
 
-            let newCode = "#include <VarSpeedServo.h> \n\nVarSpeedServo myservo1;    // create servo object to control a servo \nVarSpeedServo myservo2; \n\nvoid setup() { \nmyservo1.attach(8);  // attaches the servo on pin 9 to the servo object \nmyservo2.attach(9);  // attaches the servo on pin 9 to the servo object \n} \n\nvoid loop() {\n";
-            newBoard.forEach((row, rIndex) => {
-                newBoard[rIndex].forEach((column, cIndex) => {
-                    if (rIndex === 0 && cIndex === 0 && newBoard[rIndex][cIndex] === 'activo') {
-                        newCode += "myservo1.write(60, 10, true);     // pierna abajo \nmyservo2.write(100, 10, true);     // pierna abajo \ndelay(5000);\n\n";
-                    }
+      const points = [];
+      newBoard.forEach((row, rowIndex) => {
+        row.forEach((column, columnIndex) => {
+          if (column === "activo") {
+            points.push({ rowIndex, columnIndex });
+          }
+        });
+      });
 
-                    if (rIndex === 0 && cIndex === 1 && newBoard[rIndex][cIndex] === 'activo') {
-                        newCode += "myservo1.write(70, 10, true);     // pierna abajo \nmyservo2.write(130, 10, true);     // pierna abajo \ndelay(5000);\n\n ";
-                    }
-                });
-            });
+      let instructions = "";
+      const moveServoInstructions = ({ rowIndex, columnIndex }, direction) => {
+        let servoInstructions = "";
+        const sign = direction === "+" ? "" : "-";
+        const numStepsY = rowIndex * 4;
+        for (let step = 0; step < numStepsY; step++) {
+          servoInstructions += `
+            myStepper1.step(${sign}stepsPerRevolution);
+            delay(500);
+            myStepper1.step(${sign}stepsPerRevolution);
+            delay(500);
+            myStepper1.step(${sign}stepsPerRevolution);
+            delay(500);
+            myStepper1.step(${sign}stepsPerRevolution);
+            delay(500);\n`;
+        }
 
-            /*const items = newBoard
-                .flat()
-                .sort((a, b) => a - b)
-                .filter(Boolean);
-            let newCode = "#include <VarSpeedServo.h> \n\nVarSpeedServo myservo1;    // create servo object to control a servo \nVarSpeedServo myservo2; \n\nvoid setup() { \nmyservo1.attach(8);  // attaches the servo on pin 9 to the servo object \nmyservo2.attach(9);  // attaches the servo on pin 9 to the servo object \n} \n\nvoid loop() {\n";
-            items.forEach((item) => {
-                if (item === 1) {
-                    newCode += "myservo1.write(60, 10, true);     // pierna abajo \nmyservo2.write(100, 10, true);     // pierna abajo \ndelay(5000);\n\n";
-                }
-        
-                if (item === 2) {
-                    newCode += "myservo1.write(70, 10, true);     // pierna abajo \nmyservo2.write(130, 10, true);     // pierna abajo \ndelay(5000);\n\n ";
-                }
-            });*/
-            newCode += "\n}";
-            setCode(newCode);
-        },
-        [board, counter]
-    );
+        const numStepsX = columnIndex * 4;
+        for (let step = 0; step < numStepsX; step++) {
+          servoInstructions += `
+            myStepper2.step(${sign}stepsPerRevolution);
+            delay(500);
+            myStepper2.step(${sign}stepsPerRevolution);
+            delay(500);
+            myStepper2.step(${sign}stepsPerRevolution);
+            delay(500);
+            myStepper2.step(${sign}stepsPerRevolution);
+            delay(500);\n`;
+        }
+        return servoInstructions;
+      };
+      points.forEach((point, pointIndex) => {
+        // const numStepsY = point.rowIndex * 4;
+        // for (let step = 0; step < numStepsY; step++) {
+        //   instructions += `
+        //     myStepper1.step(-stepsPerRevolution);
+        //     delay(500);
+        //     myStepper1.step(-stepsPerRevolution);
+        //     delay(500);
+        //     myStepper1.step(-stepsPerRevolution);
+        //     delay(500);
+        //     myStepper1.step(-stepsPerRevolution);
+        //     delay(500);\n`;
+        // }
 
-    const copiarCodigo = () => {
-        console.log('copiando');
-        navigator.clipboard.writeText(code);
-        console.log('termino copiar');
-    };
+        // const numStepsX = point.columnIndex * 4;
+        // for (let step = 0; step < numStepsX; step++) {
+        //   instructions += `
+        //     myStepper2.step(-stepsPerRevolution);
+        //     delay(500);
+        //     myStepper2.step(-stepsPerRevolution);
+        //     delay(500);
+        //     myStepper2.step(-stepsPerRevolution);
+        //     delay(500);
+        //     myStepper2.step(-stepsPerRevolution);
+        //     delay(500);\n`;
+        // }
+        instructions += `
+            // Ir al punto numero: ${point.rowIndex}, ${point.columnIndex}`;
+        instructions += moveServoInstructions(point, "-");
+        instructions += `
+            // Soldar
+            myservo2.write(90, 30, true);    
+            myservo1.write(90, 30, true);    
+            delay(1);
+            myservo2.write(170, 30, true);    
+            myservo1.write(140, 30, true);    
+            delay(6000);
+            myservo1.write(90, 30, true);    
+            myservo2.write(90, 30, true)\n`;
+        instructions += `
+            // Regresar a punto de partida`;
+        instructions += moveServoInstructions(point, "+");
+      });
 
-    return (
-        <div className="App">
-            <div className={styles["app-container"]}>
-                <div>
-                    <Component />
-                    {board.map((row, rowIndex) => {
-                        return (
-                            <Row key={"row_" + rowIndex}>
-                                {row.map((column, columnIndex) => {
-                                    return (
-                                        <Button
-                                            key={"button_" + columnIndex}
-                                            index={board[rowIndex][columnIndex]}
-                                            onDropInto={() => onItemDrop(rowIndex, columnIndex)}
-                                        />
-                                    );
-                                })}
-                            </Row>
-                        );
-                    })}
-                </div>
+      const newCode = `
+      #include <Stepper.h>
+      #include <VarSpeedServo.h> 
+      
+      VarSpeedServo myservo1;  
+      VarSpeedServo myservo2;
+      
+      const int stepsPerRevolution = 500;  
+      
+      Stepper myStepper1(stepsPerRevolution, 8, 9, 10, 11);
+      Stepper myStepper2(stepsPerRevolution, 2, 3, 4, 5);
 
-                <div>
-                    <button type="button" onClick={() => copiarCodigo()} >Copiar código</button>
-                    <AceEditor
-                        mode="javascript"
-                        theme="monokai"
-                        fontSize={18}
-                        value={code}
-                        name={CODE_EDITOR_ID}
-                        editorProps={{ $blockScrolling: true }}
+      bool executed = false;
+      
+      void setup(){
+        myservo1.attach(6);  
+        myservo2.attach(7);
+      
+        myStepper1.setSpeed(60);
+        myStepper1.setSpeed(60);
+      
+        Serial.begin(9600);
+      }
+      
+      void loop() {
+        if (!executed) {
+            ${instructions}
+            executed = true;
+        }
+      }`;
+
+      console.log("points", points);
+      setCode(newCode);
+    },
+    [board, counter]
+  );
+
+  const copiarCodigo = () => {
+    navigator.clipboard.writeText(code);
+  };
+
+  return (
+    <div className="App">
+      <div className={styles["app-container"]}>
+        <div>
+          {/* <Component /> */}
+          {board.map((row, rowIndex) => {
+            return (
+              <Row key={"row_" + rowIndex}>
+                {row.map((column, columnIndex) => {
+                  return (
+                    <Button
+                      key={"button_" + columnIndex}
+                      index={board[rowIndex][columnIndex]}
+                      onClick={() => onItemDrop(rowIndex, columnIndex)}
+                      // onDropInto={() => onItemDrop(rowIndex, columnIndex)}
                     />
-                </div>
-            </div>
+                  );
+                })}
+              </Row>
+            );
+          })}
         </div>
-    );
+
+        <div>
+          <button type="button" onClick={() => copiarCodigo()}>
+            Copiar código
+          </button>
+          <AceEditor
+            mode="javascript"
+            theme="monokai"
+            fontSize={18}
+            value={code}
+            name={CODE_EDITOR_ID}
+            editorProps={{ $blockScrolling: true }}
+          />
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default App;
