@@ -54,18 +54,26 @@ function App() {
         for (let step = 0; step < numStepsY; step++) {
           servoInstructions += `
             myStepper1.step(${sign}stepsPerRevolution);
+            delay(500);
             myStepper1.step(${sign}stepsPerRevolution);
+            delay(500);
             myStepper1.step(${sign}stepsPerRevolution);
-            myStepper1.step(${sign}stepsPerRevolution);\n`;
+            delay(500);
+            myStepper1.step(${sign}stepsPerRevolution);
+            delay(500);\n`;
         }
 
         const numStepsX = columnIndex * 2;
         for (let step = 0; step < numStepsX; step++) {
           servoInstructions += `
             myStepper2.step(${sign}stepsPerRevolution);
+            delay(500);
             myStepper2.step(${sign}stepsPerRevolution);
+            delay(500);
             myStepper2.step(${sign}stepsPerRevolution);
-            myStepper2.step(${sign}stepsPerRevolution);\n`;
+            delay(500);
+            myStepper2.step(${sign}stepsPerRevolution);
+            delay(500);\n`;
         }
         return servoInstructions;
       };
