@@ -28,13 +28,10 @@ function App() {
     [null, null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null],
   ];
   const [board, setBoard] = useState(InitialBoard);
-  const [counter, setCounter] = useState(0);
   const [code, setCode] = useState("");
 
   const onItemDrop = useCallback(
     (rowIndex, columnIndex) => {
-      const newCounter = counter + 1;
-      setCounter(newCounter);
       const newBoard = board;
       newBoard[rowIndex][columnIndex] = "activo";
       setBoard(newBoard);
@@ -56,55 +53,22 @@ function App() {
         for (let step = 0; step < numStepsY; step++) {
           servoInstructions += `
             myStepper1.step(${sign}stepsPerRevolution);
-            delay(500);
             myStepper1.step(${sign}stepsPerRevolution);
-            delay(500);
             myStepper1.step(${sign}stepsPerRevolution);
-            delay(500);
-            myStepper1.step(${sign}stepsPerRevolution);
-            delay(500);\n`;
+            myStepper1.step(${sign}stepsPerRevolution);\n`;
         }
 
         const numStepsX = columnIndex * 4;
         for (let step = 0; step < numStepsX; step++) {
           servoInstructions += `
             myStepper2.step(${sign}stepsPerRevolution);
-            delay(500);
             myStepper2.step(${sign}stepsPerRevolution);
-            delay(500);
             myStepper2.step(${sign}stepsPerRevolution);
-            delay(500);
-            myStepper2.step(${sign}stepsPerRevolution);
-            delay(500);\n`;
+            myStepper2.step(${sign}stepsPerRevolution);\n`;
         }
         return servoInstructions;
       };
-      points.forEach((point, pointIndex) => {
-        // const numStepsY = point.rowIndex * 4;
-        // for (let step = 0; step < numStepsY; step++) {
-        //   instructions += `
-        //     myStepper1.step(-stepsPerRevolution);
-        //     delay(500);
-        //     myStepper1.step(-stepsPerRevolution);
-        //     delay(500);
-        //     myStepper1.step(-stepsPerRevolution);
-        //     delay(500);
-        //     myStepper1.step(-stepsPerRevolution);
-        //     delay(500);\n`;
-        // }
-
-        // const numStepsX = point.columnIndex * 4;
-        // for (let step = 0; step < numStepsX; step++) {
-        //   instructions += `
-        //     myStepper2.step(-stepsPerRevolution);
-        //     delay(500);
-        //     myStepper2.step(-stepsPerRevolution);
-        //     delay(500);
-        //     myStepper2.step(-stepsPerRevolution);
-        //     delay(500);
-        //     myStepper2.step(-stepsPerRevolution);
-        //     delay(500);\n`;
-        // }
+      points.forEach((point) => {
         instructions += `
             // Ir al punto numero: ${point.rowIndex}, ${point.columnIndex}`;
         instructions += moveServoInstructions(point, "-");
@@ -154,13 +118,12 @@ function App() {
         }
       }`;
 
-      console.log("points", points);
       setCode(newCode);
     },
-    [board, counter]
+    [board]
   );
 
-  const copiarCodigo = () => {
+  const copyCode = () => {
     navigator.clipboard.writeText(code);
   };
 
@@ -168,7 +131,6 @@ function App() {
     <div className="App">
       <div className={styles["app-container"]}>
         <div>
-          {/* <Component /> */}
           {board.map((row, rowIndex) => {
             return (
               <Row key={"row_" + rowIndex}>
@@ -178,7 +140,6 @@ function App() {
                       key={"button_" + columnIndex}
                       index={board[rowIndex][columnIndex]}
                       onClick={() => onItemDrop(rowIndex, columnIndex)}
-                      // onDropInto={() => onItemDrop(rowIndex, columnIndex)}
                     />
                   );
                 })}
@@ -188,7 +149,7 @@ function App() {
         </div>
 
         <div>
-          <button type="button" onClick={() => copiarCodigo()}>
+          <button type="button" onClick={() => copyCode()}>
             Copiar código
           </button>
           <AceEditor
