@@ -51,18 +51,18 @@ function App() {
         let servoInstructions = "";
         const sign = direction === "+" ? "" : "-";
         const numStepsY = rowIndex * 1666;
-        for (let step = 0; step < numStepsY; step++) {
-          servoInstructions += `
+        // for (let step = 0; step < numStepsY; step++) {
+        servoInstructions += `
             myStepper1.step(${sign}${numStepsY});
             delay(500);\n`;
-        }
+        // }
 
         const numStepsX = columnIndex * 2453;
-        for (let step = 0; step < numStepsX; step++) {
-          servoInstructions += `
+        // for (let step = 0; step < numStepsX; step++) {
+        servoInstructions += `
             myStepper2.step(${sign}${numStepsX});
             delay(500);\n`;
-        }
+        // }
         return servoInstructions;
       };
       points.forEach((point) => {
