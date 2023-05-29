@@ -5,6 +5,7 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import Row from "./components/row";
 import Button from "./components/button";
 import { useCallback, useState } from "react";
+import { FiCopy, FiEdit3, FiMove } from "react-icons/fi";
 
 import styles from "./styles.module.css";
 
@@ -30,62 +31,8 @@ function App() {
   const [board, setBoard] = useState(InitialBoard);
   const [code, setCode] = useState("");
 
-  const onItemDrop = useCallback(
-    (rowIndex, columnIndex) => {
-      const newBoard = board;
-      const oldValue = newBoard[rowIndex][columnIndex];
-      newBoard[rowIndex][columnIndex] = oldValue === 0 ? "activo" : 0;
-      setBoard(newBoard);
-
-      const points = [];
-      newBoard.forEach((row, rowIndex) => {
-        row.forEach((column, columnIndex) => {
-          if (column === "activo") {
-            points.push({ rowIndex, columnIndex });
-          }
-        });
-      });
-
-      let instructions = "";
-      const moveServoInstructions = ({ rowIndex, columnIndex }, direction) => {
-        let servoInstructions = "";
-        const sign = direction === "+" ? "" : "-";
-        const numStepsY = rowIndex * 1666;
-        // for (let step = 0; step < numStepsY; step++) {
-        servoInstructions += `
-            myStepper1.step(${sign}${numStepsY});
-            delay(500);\n`;
-        // }
-
-        const numStepsX = columnIndex * 2453;
-        // for (let step = 0; step < numStepsX; step++) {
-        servoInstructions += `
-            myStepper2.step(${sign}${numStepsX});
-            delay(500);\n`;
-        // }
-        return servoInstructions;
-      };
-      points.forEach((point) => {
-        instructions += `
-            // Ir al punto numero: ${point.rowIndex}, ${point.columnIndex}`;
-        instructions += moveServoInstructions(point, "-");
-        instructions += `
-            // Soldar
-            myservo2.write(90, 30, true); 
-            myservo1.write(90, 30, true); 
-            delay(1);
-            myservo2.write(150, 30, true);
-            myservo1.write(180, 30, true); 
-
-            delay(6000);
-            myservo1.write(90, 30, true); 
-            myservo2.write(90, 30, true); \n`;
-        instructions += `
-            // Regresar a punto de partida`;
-        instructions += moveServoInstructions(point, "+");
-      });
-
-      const newCode = `
+  const getBaseCode = (instructions) => {
+    const baseCode = `
       #include <Stepper.h>
       #include <VarSpeedServo.h> 
       
@@ -116,10 +63,83 @@ function App() {
         }
       }`;
 
+    return baseCode;
+  };
+
+  const onItemDrop = useCallback(
+    (rowIndex, columnIndex) => {
+      const newBoard = board;
+      const oldValue = newBoard[rowIndex][columnIndex];
+      newBoard[rowIndex][columnIndex] = oldValue === 0 ? "activo" : 0;
+      setBoard(newBoard);
+
+      const points = [];
+      newBoard.forEach((row, rowIndex) => {
+        row.forEach((column, columnIndex) => {
+          if (column === "activo") {
+            points.push({ rowIndex, columnIndex });
+          }
+        });
+      });
+
+      let instructions = "";
+      const moveServoInstructions = ({ rowIndex, columnIndex }, direction) => {
+        let servoInstructions = "";
+        const sign = direction === "+" ? "" : "-";
+        const numStepsY = rowIndex * 1666;
+        servoInstructions += `
+            myStepper1.step(${sign}${numStepsY});
+            delay(500);\n`;
+
+        const numStepsX = columnIndex * 2453;
+        servoInstructions += `
+            myStepper2.step(${sign}${numStepsX});
+            delay(500);\n`;
+        return servoInstructions;
+      };
+      points.forEach((point) => {
+        instructions += `
+            // Ir al punto numero: ${point.rowIndex}, ${point.columnIndex}`;
+        instructions += moveServoInstructions(point, "-");
+        instructions += `
+            // Soldar
+            myservo2.write(90, 30, true); 
+            myservo1.write(90, 30, true); 
+            delay(1);
+            myservo2.write(150, 30, true);
+            myservo1.write(180, 30, true); 
+
+            delay(6000);
+            myservo1.write(90, 30, true); 
+            myservo2.write(90, 30, true); \n`;
+        instructions += `
+            // Regresar a punto de partida`;
+        instructions += moveServoInstructions(point, "+");
+      });
+
+      const newCode = getBaseCode(instructions);
       setCode(instructions !== "" ? newCode : "");
     },
     [board]
   );
+
+  const calibrate = () => {
+    const instructions = `
+            myStepper2.step(-300);
+            delay(500);\n`;
+    const newCode = getBaseCode(instructions);
+    setCode(newCode);
+  };
+
+  const adjustSolder = () => {
+    const instructions = `
+            myservo1.write(90, 30, true); 
+            delay(1);
+            myservo1.write(180, 30, true); 
+            delay(1000);\n`;
+    const newCode = getBaseCode(instructions);
+    setCode(newCode);
+  };
 
   const copyCode = () => {
     navigator.clipboard.writeText(code);
@@ -156,7 +176,16 @@ function App() {
 
         <section>
           <div className={styles["copy-code"]}>
+            <button type="button" onClick={() => calibrate()}>
+              <FiMove />
+              Calibrar
+            </button>
+            <button type="button" onClick={() => adjustSolder()}>
+              <FiEdit3 />
+              Ajustar soldadura
+            </button>
             <button type="button" onClick={() => copyCode()}>
+              <FiCopy />
               Copiar código
             </button>
           </div>
