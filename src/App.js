@@ -50,29 +50,17 @@ function App() {
       const moveServoInstructions = ({ rowIndex, columnIndex }, direction) => {
         let servoInstructions = "";
         const sign = direction === "+" ? "" : "-";
-        const numStepsY = rowIndex * 2;
+        const numStepsY = rowIndex * 1666;
         for (let step = 0; step < numStepsY; step++) {
           servoInstructions += `
-            myStepper1.step(${sign}stepsPerRevolution);
-            delay(500);
-            myStepper1.step(${sign}stepsPerRevolution);
-            delay(500);
-            myStepper1.step(${sign}stepsPerRevolution);
-            delay(500);
-            myStepper1.step(${sign}stepsPerRevolution);
+            myStepper1.step(${sign}${numStepsY});
             delay(500);\n`;
         }
 
-        const numStepsX = columnIndex * 2;
+        const numStepsX = columnIndex * 2453;
         for (let step = 0; step < numStepsX; step++) {
           servoInstructions += `
-            myStepper2.step(${sign}stepsPerRevolution);
-            delay(500);
-            myStepper2.step(${sign}stepsPerRevolution);
-            delay(500);
-            myStepper2.step(${sign}stepsPerRevolution);
-            delay(500);
-            myStepper2.step(${sign}stepsPerRevolution);
+            myStepper2.step(${sign}${numStepsX});
             delay(500);\n`;
         }
         return servoInstructions;
