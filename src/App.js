@@ -11,7 +11,7 @@ import styles from "./styles.module.css";
 function App() {
   const CODE_EDITOR_ID = "code-editor";
   const InitialBoard = [
-    [null, null, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null],
+    [null, null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null],
     [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
