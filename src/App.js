@@ -143,7 +143,7 @@ function App() {
         <section>
           <div className={styles["board-container"]}>
             <div>
-              <img src="./logo ITESA.png" alt="ITESA" width={250} />
+              <img src="./logo ITESA.png" alt="ITESA" width={200} />
             </div>
 
             <div>
